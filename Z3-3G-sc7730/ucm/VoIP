@@ -1,0 +1,378 @@
+# Use case Configuration for SPRD DOLPHIN HiFi audio playback and capture
+
+
+######### Main Verb Config #################
+
+SectionVerb {
+
+	EnableSequence [
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		# VBC Switch to DSP
+		cset "name='VBC Switch' 1"
+
+		#DAC gain
+		cset "name='DACL Playback Volume' 7"
+		cset "name='DACR Playback Volume' 7"
+
+		#ADC gain
+		cset "name='ADCL Capture Volume' 56"
+		cset "name='ADCR Capture Volume' 56"
+	]
+
+	DisableSequence [
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		# VBC Switch to ARM
+		cset "name='VBC Switch' 2"
+
+		# sprdphone Receiver playback path
+		cset "name='Earpiece Function' 0"
+
+		# sprdphone Headphones playback path
+		cset "name='HeadPhone Function' 0"
+		cset "name='HPL Mixer DACLHPL Switch' 0"
+		cset "name='HPR Mixer DACRHPR Switch' 0"
+
+		# sprdphone speaker playback path
+		cset "name='Speaker Function' 0"
+		cset "name='SPKL Mixer DACLSPKL Switch' 0"
+		cset "name='SPKL Mixer DACRSPKL Switch' 0"
+
+		# sprdphone headphone mic capture path disable
+		cset "name='HP Mic Function' 0"
+		cset "name='ADCL Mixer HPMICADCL Switch' 0"
+		cset "name='ADCR Mixer HPMICADCR Switch' 0"
+
+		# sprdphone Mainmic capture path disable
+		cset "name='Mic Function' 0"
+		cset "name='ADCL Mixer MainMICADCL Switch' 0"
+		cset "name='ADCR Mixer MainMICADCR Switch' 0"
+	]
+
+	# ALSA PCM
+	Value {
+		TQ "Voice"
+		# ALSA PCM device for Voice
+		PlaybackPCM "hw:saudiovoip,0"
+		CapturePCM "hw:saudiovoip,0"
+	}
+}
+
+########### Speaker Device Options ################
+
+SectionDevice."Speaker" {
+	Comment "sprdphone Handsfree Speaker playback"
+
+	EnableSequence [
+
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		#send at to modem
+		exec "echo -e \"AT+SSAM=1;\\r\" > /dev/stty_td0"
+
+		# gain setting
+		cset "name='SPKL Playback Volume' 8"
+		cset "name='SPKR Playback Volume' 8"
+
+		# sprdphone speaker playback path
+		cset "name='SPKL Mixer DACLSPKL Switch' 1"
+		cset "name='SPKL Mixer DACRSPKL Switch' 1"
+		cset "name='Speaker Function' 1"
+
+		# sprdphone playback path
+		cset "name='Earpiece Function' 0"
+
+		# sprdphone Headphones playback path
+		cset "name='HeadPhone Function' 0"
+		cset "name='HPL Mixer DACLHPL Switch' 0"
+		cset "name='HPR Mixer DACRHPR Switch' 0"
+	]
+
+	DisableSequence [
+
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		# sprdphone speaker playback path
+		cset "name='SPKL Mixer DACLSPKL Switch' 0"
+		cset "name='SPKL Mixer DACRSPKL Switch' 0"
+		cset "name='Speaker Function' 0"
+
+	]
+
+	Value {
+		# Default ALSA volume gain and mute kcontrols
+		PlaybackPCM "hw:saudiovoip,0"
+		CapturePCM "hw:saudiovoip,0"
+
+	}
+}
+
+###### Headphones Devices Options ############
+
+SectionDevice."Headphones" {
+	Comment "SPRD DOLPHIN 3.5mm Headphones playback"
+
+	EnableSequence [
+
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		#send at to modem
+		exec "echo -e \"AT+SSAM=2;\\r\" > /dev/stty_td0"
+
+		#gain setting
+		cset "name='HPL Playback Volume' 10"
+		cset "name='HPR Playback Volume' 10"
+
+		# sprdphone playback path
+		cset "name='HPL Mixer DACLHPL Switch' 1"
+		cset "name='HPR Mixer DACRHPR Switch' 1"
+		cset "name='HeadPhone Function' 1"
+
+		# sprdphone playback path
+		cset "name='Earpiece Function' 0"
+		# sprdphone speaker playback path
+		cset "name='Speaker Function' 0"
+		cset "name='SPKL Mixer DACLSPKL Switch' 0"
+		cset "name='SPKL Mixer DACRSPKL Switch' 0"
+	]
+
+	DisableSequence [
+
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		# sprdphone Headphones playback path
+		cset "name='HeadPhone Function' 0"
+		cset "name='HPL Mixer DACLHPL Switch' 0"
+		cset "name='HPR Mixer DACRHPR Switch' 0"
+
+	]
+
+	Value {
+		# Default ALSA volume gain and mute kcontrols
+		PlaybackPCM "hw:saudiovoip,0"
+		CapturePCM "hw:saudiovoip,0"
+	}
+}
+
+########### Earpiece Device Options ################
+
+SectionDevice."Earpiece" {
+	Comment "Earpiece playback"
+
+	EnableSequence [
+
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		#send at to modem
+		exec "echo -e \"AT+SSAM=0;\\r\" > /dev/stty_td0"
+
+		#gain setting
+		cset "name='EAR Playback Volume' 7"
+
+		# sprdphone playback path
+		cset "name='Earpiece Function' 1"
+
+		# sprdphone speaker playback path
+		cset "name='Speaker Function' 0"
+		cset "name='SPKL Mixer DACLSPKL Switch' 0"
+		cset "name='SPKL Mixer DACRSPKL Switch' 0"
+		# sprdphone Headphones playback path
+		cset "name='HeadPhone Function' 0"
+		cset "name='HPL Mixer DACLHPL Switch' 0"
+		cset "name='HPR Mixer DACRHPR Switch' 0"
+	]
+
+	DisableSequence [
+
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		# sprdphone playback path
+		cset "name='Earpiece Function' 0"
+
+	]
+
+	Value {
+		# Default ALSA volume gain and mute kcontrols
+		PlaybackPCM "hw:saudiovoip,0"
+		CapturePCM "hw:saudiovoip,0"
+	}
+}
+
+########### Bluetooth Device Options ################
+
+SectionDevice."Bluetooth" {
+	Comment "Bluetooth playback"
+
+	EnableSequence [
+
+		# Set sprdphone device for following cset commands
+		cdev "hw:sprdphone"
+
+		#send at to modem
+		exec "echo -e \"AT+SSAM=5;\\r\" > /dev/stty_td0"
+
+		# sprdphone playback path
+		cset "name='Earpiece Function' 0"
+		cset "name='Mic Function' 0"
+		cset "name='HeadPhone Function' 0"
+		cset "name='HP Mic Function' 0"
+		cset "name='Speaker Function' 0"
+		cset "name='Linein Rec Function' 0"
+	]
+
+	DisableSequence [
+
+	]
+
+	Value {
+		# Default ALSA volume gain and mute kcontrols
+		PlaybackPCM "hw:saudiovoip,0"
+		CapturePCM "hw:saudiovoip,0"
+	}
+}
+
+########### Mainmic Device Options ################
+
+SectionDevice."MainMic" {
+        Comment "main mic capture"
+
+        EnableSequence [
+                # Set sprdphone device for following cset commands
+                cdev "hw:sprdphone"
+
+                #vbc adc DG  gain setting
+                cset "name='VBC ADCL DG Set' 16"
+                cset "name='VBC ADCR DG Set' 16"
+
+                cset "name='VBC ADCL DG Switch' 1"
+                cset "name='VBC ADCR DG Switch' 1"
+
+                # sprdphone capture path
+                cset "name='ADCL Mixer MainMICADCL Switch' 1"
+                cset "name='ADCR Mixer MainMICADCR Switch' 1"
+                cset "name='Mic Function' 1"
+
+                # sprdphone headphone mic capture path disable
+                cset "name='HP Mic Function' 0"
+                cset "name='ADCL Mixer HPMICADCL Switch' 0"
+                cset "name='ADCR Mixer HPMICADCR Switch' 0"
+        ]
+
+        DisableSequence [
+
+                # Set sprdphone device for following cset commands
+                cdev "hw:sprdphone"
+
+                # sprdphone capture path
+                cset "name='Mic Function' 0"
+                cset "name='ADCL Mixer MainMICADCL Switch' 0"
+                cset "name='ADCR Mixer MainMICADCR Switch' 0"
+                cset "name='VBC ADCL DG Switch' 0"
+                cset "name='VBC ADCR DG Switch' 0"
+
+        ]
+
+        Value {
+                # Default ALSA volume gain and mute kcontrols
+				CapturePCM "hw:saudiovoip,0"
+        }
+}
+
+
+########### BackAux Mic Device Options ################
+
+SectionDevice."SubMic" {
+        Comment "BackAux mic capture"
+
+        EnableSequence [
+                # Set sprdphone device for following cset commands
+                cdev "hw:sprdphone"
+
+                #vbc adc DG  gain setting
+                cset "name='VBC ADCL DG Set' 16"
+                cset "name='VBC ADCR DG Set' 16"
+
+                cset "name='VBC ADCL DG Switch' 1"
+                cset "name='VBC ADCR DG Switch' 1"
+
+                # sprdphone BackAux mic capture path
+                cset "name='Aux Mic Function' 1"
+                cset "name='ADCL Mixer AuxMICADCL Switch' 1"
+                cset "name='ADCR Mixer AuxMICADCR Switch' 1"
+
+        ]
+
+        DisableSequence [
+
+                # Set sprdphone device for following cset commands
+                cdev "hw:sprdphone"
+
+                # sprdphone BackAux mic capture path
+                cset "name='Aux Mic Function' 0"
+                cset "name='ADCL Mixer AuxMICADCL Switch' 0"
+                cset "name='ADCR Mixer AuxMICADCR Switch' 0"
+
+                cset "name='VBC ADCL DG Switch' 0"
+                cset "name='VBC ADCR DG Switch' 0"
+
+        ]
+
+        Value {
+                # Default ALSA volume gain and mute kcontrols
+				CapturePCM "hw:saudiovoip,0"
+        }
+}
+
+########### Headset Mic Device Options ################
+
+SectionDevice."HeadsetMic" {
+        Comment "Headset mic capture"
+
+        EnableSequence [
+                # Set sprdphone device for following cset commands
+                cdev "hw:sprdphone"
+
+                #vbc adc DG  gain setting
+                cset "name='VBC ADCL DG Set' 16"
+                cset "name='VBC ADCR DG Set' 16"
+
+                cset "name='VBC ADCL DG Switch' 1"
+                cset "name='VBC ADCR DG Switch' 1"
+
+                # sprdphone headphone mic capture path
+                cset "name='ADCL Mixer HPMICADCL Switch' 1"
+                cset "name='ADCR Mixer HPMICADCR Switch' 1"
+                cset "name='HP Mic Function' 1"
+
+                # sprdphone Mainmic capture path disable
+                cset "name='Mic Function' 0"
+                cset "name='ADCL Mixer MainMICADCL Switch' 0"
+                cset "name='ADCR Mixer MainMICADCR Switch' 0"
+        ]
+
+        DisableSequence [
+
+                # Set sprdphone device for following cset commands
+                cdev "hw:sprdphone"
+
+                # sprdphone headphone mic capture path
+                cset "name='HP Mic Function' 0"
+                cset "name='ADCL Mixer HPMICADCL Switch' 0"
+                cset "name='ADCR Mixer HPMICADCR Switch' 0"
+
+        ]
+
+        Value {
+                # Default ALSA volume gain and mute kcontrols
+				CapturePCM "hw:saudiovoip,0"
+        }
+}
