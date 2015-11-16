@@ -1,6 +1,6 @@
 Name:       audio-config-sc
 Summary:    audio configuration files
-Version:    0.1.16
+Version:    0.1.17
 Release:    0
 Group:      TO_BE/FILLED_IN
 License:    Apache-2.0
