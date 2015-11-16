@@ -8,10 +8,6 @@ BuildArch:  noarch
 Source0:    audio-config-sc-%{version}.tar.gz
 Requires(post): coreutils
 
-%if "%{tizen_target_name}" != "Z130H" && "%{tizen_target_name}" != "Z300H"
-ExcludeArch: %{arm} %ix86 x86_64
-%endif
-
 %description
 audio configuration files for spreadtrum devices such as ucm files.
 
