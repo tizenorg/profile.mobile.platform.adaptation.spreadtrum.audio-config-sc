@@ -8,6 +8,10 @@ BuildArch:  noarch
 Source0:    audio-config-sc-%{version}.tar.gz
 Requires(post): coreutils
 
+%if "%{?tizen_target_name}" != "TM1"
+ExcludeArch: noarch
+%endif
+
 %description
 audio configuration files for spreadtrum devices such as ucm files.
 
